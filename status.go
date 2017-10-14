@@ -4,11 +4,14 @@ package main
 import "fmt"
 
 // webpage is a webpage, stored as a string.
-type webpage string
+type webpage struct {
+	url         string
+	getResponse func() string
+}
 
 // string returns a human readable version of the webpage.
 func (this webpage) String() string {
-	return string(this)
+	return string(this.url)
 }
 
 // main starts the program
