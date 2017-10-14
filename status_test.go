@@ -13,4 +13,8 @@ func TestString(t *testing.T) {
 	if testWebpage.String() != "https://gitlab.com" {
 		t.Errorf("String version of webpage doesn't translate")
 	}
+
+	if testWebpage.status() != mockResponse {
+		t.Errorf("Status does not call through to injected getResponse method")
+	}
 }

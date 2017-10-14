@@ -14,6 +14,11 @@ func (this webpage) String() string {
 	return string(this.url)
 }
 
+// status returns the http response from a get request to this site
+func (this webpage) status() string {
+	return this.getResponse()
+}
+
 // main starts the program
 func main() {
 	fmt.Println("Oh hai world!!!")
