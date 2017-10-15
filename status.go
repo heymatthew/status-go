@@ -4,8 +4,11 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 )
+
+const DefaultUrl = "https://gitlab.com"
 
 // webpage is a response time checker
 type webpage struct {
@@ -37,9 +40,17 @@ func (this webpage) timedResponse() string {
 	return fmt.Sprintf("%d %dms", code, int(seconds*1000))
 }
 
+// getUrl returns the first runtime argument, or the default url
+func getUrl() string {
+	if len(os.Args) > 1 {
+		return os.Args[1]
+	}
+	return DefaultUrl
+}
+
 // main starts the program, printing the http status and response time for 5 minutes
 func main() {
-	site := webpage{url: "https://gitlab.com", fetch: http.DefaultClient}
+	site := webpage{url: getUrl(), fetch: http.DefaultClient}
 	_, _ = site.responseCode() // Hack, for some reason the first run is very slow
 
 	ticker := time.NewTicker(time.Second) // Flood protection
