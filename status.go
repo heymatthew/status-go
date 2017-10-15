@@ -1,25 +1,41 @@
 // Package main contains methods to check the http status of a website.
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+	"time"
+)
 
-// webpage is a webpage, stored as a string.
+// webpage is a response time checker
 type webpage struct {
-	url         string
-	getResponse func() string
+	url   string
+	fetch httpHead
 }
 
-// string returns a human readable version of the webpage.
-func (this webpage) String() string {
-	return string(this.url)
+// httpHead is an abstraction over the http.Head
+type httpHead interface {
+	Head(string) (resp *http.Response, err error)
 }
 
-// status returns the http response from a get request to this site
-func (this webpage) status() string {
-	return this.getResponse()
+// responseCode checks webpage.url and reutrns it's http resonse
+func (this webpage) responseCode() (int, error) {
+	resp, err := this.fetch.Head(this.url)
+	if err != nil {
+		return 0, err
+	}
+
+	return resp.StatusCode, nil
 }
 
 // main starts the program
 func main() {
-	fmt.Println("Oh hai world!!!")
+	site := webpage{url: "https://gitlab.com", fetch: http.DefaultClient}
+
+	start := time.Now()
+	code, _ := site.responseCode()
+	seconds := time.Since(start).Seconds()
+
+	timeMillis := fmt.Sprintf("%dms", int(seconds*1000))
+	fmt.Println(code, timeMillis)
 }
