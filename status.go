@@ -42,8 +42,13 @@ func main() {
 	site := webpage{url: "https://gitlab.com", fetch: http.DefaultClient}
 	_, _ = site.responseCode() // Hack, for some reason the first run is very slow
 
-	start := time.Now()
-	for time.Since(start).Minutes() < 5 {
-		fmt.Println(site.timedResponse())
-	}
+	ticker := time.NewTicker(time.Second) // Flood protection
+	go func() {
+		for range ticker.C {
+			fmt.Println(site.timedResponse())
+		}
+	}()
+
+	time.Sleep(time.Minute * 5)
+	ticker.Stop()
 }
