@@ -34,10 +34,14 @@ func (this webpage) responseCode() (int, error) {
 // timedResponse returns the http status from url and ms passed since fetch
 func (this webpage) timedResponse() string {
 	start := time.Now()
-	code, _ := this.responseCode()
-	seconds := time.Since(start).Seconds()
+	code, err := this.responseCode()
+	milliseconds := int(time.Since(start).Seconds() * 1000)
 
-	return fmt.Sprintf("%d %dms", code, int(seconds*1000))
+	if err != nil {
+		return fmt.Sprintf("%s %dms", err.Error(), milliseconds)
+	}
+
+	return fmt.Sprintf("%d %dms", code, milliseconds)
 }
 
 // getUrl returns the first runtime argument, or the default url
