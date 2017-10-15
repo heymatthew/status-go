@@ -28,14 +28,16 @@ func (this webpage) responseCode() (int, error) {
 	return resp.StatusCode, nil
 }
 
+func (this webpage) timedResponse() string {
+	start := time.Now()
+	code, _ := this.responseCode()
+	seconds := time.Since(start).Seconds()
+
+	return fmt.Sprintf("%d %dms", code, int(seconds*1000))
+}
+
 // main starts the program
 func main() {
 	site := webpage{url: "https://gitlab.com", fetch: http.DefaultClient}
-
-	start := time.Now()
-	code, _ := site.responseCode()
-	seconds := time.Since(start).Seconds()
-
-	timeMillis := fmt.Sprintf("%dms", int(seconds*1000))
-	fmt.Println(code, timeMillis)
+	fmt.Println(site.timedResponse())
 }
