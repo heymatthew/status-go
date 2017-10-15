@@ -28,6 +28,7 @@ func (this webpage) responseCode() (int, error) {
 	return resp.StatusCode, nil
 }
 
+// timedResponse returns the http status from url and ms passed since fetch
 func (this webpage) timedResponse() string {
 	start := time.Now()
 	code, _ := this.responseCode()
@@ -36,8 +37,13 @@ func (this webpage) timedResponse() string {
 	return fmt.Sprintf("%d %dms", code, int(seconds*1000))
 }
 
-// main starts the program
+// main starts the program, printing the http status and response time for 5 minutes
 func main() {
 	site := webpage{url: "https://gitlab.com", fetch: http.DefaultClient}
-	fmt.Println(site.timedResponse())
+	_, _ = site.responseCode() // Hack, for some reason the first run is very slow
+
+	start := time.Now()
+	for time.Since(start).Minutes() < 5 {
+		fmt.Println(site.timedResponse())
+	}
 }
