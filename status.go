@@ -28,6 +28,7 @@ func (this webpage) responseCode() (int, error) {
 		return 0, err
 	}
 
+	defer resp.Body.Close()
 	return resp.StatusCode, nil
 }
 
